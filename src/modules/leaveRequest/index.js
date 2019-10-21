@@ -1,121 +1,186 @@
-import React from 'react'
-import './LeaveRequest.scss'
-import { Card, Form, DatePicker, Select, Input, Calendar, List, Avatar } from 'antd'
+import React from 'react';
+import './LeaveRequest.scss';
+import { Card, Form, DatePicker, Select, Input, Calendar, List, Avatar, Row, Col, Button, Icon } from 'antd';
+import { dailySalesChart } from '../chart';
+import ChartistGraph from 'react-chartist';
+
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
+
 const data = [
-    {
-        title: 'Prashant',
-    },
-    {
-        title: 'Prakash',
-    },
-    {
-        title: 'Dipak',
-    },
-    {
-        title: 'Avinash',
-    },
+	{
+		title: 'Prashant'
+	},
+	{
+		title: 'Prakash'
+	},
+	{
+		title: 'Dipak'
+	},
+	{
+		title: 'Avinash'
+	}
 ];
 
-
 class LeaveRequest extends React.Component {
-    onChangeDate = (date, dateString) => {
-        console.log(date, dateString);
-    }
-    render() {
-        const { getFieldDecorator } = this.props.form;
-        return (<div className="leave-req">
-            <Card className="leave-req-card">
-                <div className="wrapper">
-                    <div className="from-to-sec">
-                        {/* <div className="title">Team Leave Calender</div> */}
-                        <Form>
-                            <FormItem>
-                                {getFieldDecorator('fromTo', {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: 'Please select dates!'
-                                        }
-                                    ]
-                                })(<RangePicker />)}
-                            </FormItem>
-                            <FormItem label="Select available leave types">
-                                {getFieldDecorator('leaveType', {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: 'Please enter a valid orgType to update!'
-                                        }
-                                    ]
-                                })(<Select
-                                    placeholder="Select leave type"
-                                    showSearch
-                                >
-                                    <Option value="Casual Leave">Casual Leave</Option>
-                                    <Option value="Sick Leave">Sick Leave</Option>
-                                    <Option value="Unpaid Leave">Unpaid Leave</Option>
-
-                                </Select>)}
-                            </FormItem>
-                            <FormItem label="Note">
-                                {getFieldDecorator('note', {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: 'Note is required!'
-                                        }
-                                    ]
-                                })(
-                                    <TextArea placeholder="Please enter reason for applying leave" rows={4} />
-                                )}
-                            </FormItem>
-                            <FormItem label="Notify">
-                                {getFieldDecorator('notify', {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: 'Please select someone to notify about your leave!'
-                                        }
-                                    ]
-                                })(<Select
-                                    showSearch
-                                    mode="tags"
-                                    placeholder="Search Employee"
-                                >
-                                    <Option value="Prashant">Prashant</Option>
-                                    <Option value="Prksh">Prksh</Option>
-                                    <Option value="Dipak">Dipak</Option>
-
-                                </Select>)}
-                            </FormItem>
-                        </Form>
-                    </div>
-                    <div className="calender-notify">
-                        <div className="title">Team Leave Calender</div>
-                        <Calendar className="cal" fullscreen={false} />
-                        <div className="team-list">
-                            <List
-                                itemLayout="horizontal"
-                                dataSource={data}
-                                renderItem={item => (
-                                    <List.Item>
-                                        <List.Item.Meta
-                                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                            title={<a href="https://ant.design">{item.title}</a>}
-                                            description=""
-                                        />
-                                    </List.Item>
-                                )}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </Card>
-        </div>)
-    }
+	onChangeDate = (date, dateString) => {
+		console.log(date, dateString);
+	};
+	render() {
+		const { getFieldDecorator } = this.props.form;
+		return (
+			<div className="leave-request">
+				<Row>
+					<h2 className="text-dimmed font-large"> Apply Leave </h2>
+				</Row>
+				<Row gutter={16}>
+					<Col span={6}>
+						<Card className="elevated-shadow-noh height-100" bordered={false}>
+							<p className="text-small text-dark half-opacity">Pending Request</p>
+							<p className="font-xlarge text-dark">Not Available</p>
+						</Card>
+					</Col>
+					<Col offset={12} span={6}>
+						<Card className="elevated-shadow-noh height-100" bordered={false}>
+							<Button type="primary" icon="form">
+								Apply Leave
+							</Button>
+						</Card>
+					</Col>
+				</Row>
+				<Row className="xmt">
+					<h2 className="text-dimmed font-large"> Leave Balance </h2>
+				</Row>
+				<Row gutter={16}>
+					<Col span={5}>
+						<Card
+							className="elevated-shadow-noh"
+							style={{ background: '#fff', height: '250px' }}
+							bordered={false}
+						>
+							<p className="text-small text-dark half-opacity">Marriage Leave</p>
+							<ChartistGraph
+								className="ct-chart marriage-chart text-white"
+								data={{
+									series: [ 3, 10 ]
+								}}
+								type="Pie"
+								options={{
+									donut: true,
+									donutWidth: 30,
+									donutSolid: true
+								}}
+								listener={dailySalesChart.animation}
+							/>
+							<center>
+								<p className="font-tiny text-dimmed text-dark">
+									<i class="fas fa-circle marriage-chart-used" /> Used &nbsp;&nbsp;&nbsp;<i class="fas fa-circle marriage-chart-available" />{' '}
+									Available{' '}
+								</p>
+							</center>
+						</Card>
+					</Col>
+					<Col span={5}>
+						<Card
+							className="elevated-shadow-noh"
+							style={{ background: '#fff', height: '250px' }}
+							bordered={false}
+						>
+							<p className="text-small text-dark half-opacity">Paid Leave</p>
+							<ChartistGraph
+								className="ct-chart paid-leave-chart text-white"
+								data={{
+									series: [ 4, 3 ]
+								}}
+								type="Pie"
+								options={{
+									donut: true,
+									donutWidth: 30,
+									donutSolid: true
+								}}
+								listener={dailySalesChart.animation}
+							/>
+							<center>
+								<p className="font-tiny text-dimmed text-dark">
+									<i class="fas fa-circle paid-leave-chart-used" /> Used &nbsp;&nbsp;&nbsp;<i class="fas fa-circle paid-leave-chart-available" />{' '}
+									Available{' '}
+								</p>
+							</center>
+						</Card>
+					</Col>
+          <Col span={5}>
+						<Card
+							className="elevated-shadow-noh"
+							style={{ background: '#fff', height: '250px' }}
+							bordered={false}
+						>
+							<p className="text-small text-dark half-opacity">Sick Leave</p>
+							<ChartistGraph
+								className="ct-chart sick-leave-chart text-white"
+								data={{
+									series: [ 5, 5 ]
+								}}
+								type="Pie"
+								options={{
+									donut: true,
+									donutWidth: 30,
+									donutSolid: true
+								}}
+								listener={dailySalesChart.animation}
+							/>
+							<center>
+								<p className="font-tiny text-dimmed text-dark">
+									<i class="fas fa-circle sick-leave-chart-used" /> Used &nbsp;&nbsp;&nbsp;<i class="fas fa-circle sick-leave-chart-available" />{' '}
+									Available{' '}
+								</p>
+							</center>
+						</Card>
+					</Col>
+          <Col span={5}>
+						<Card
+							className="elevated-shadow-noh"
+							style={{ background: '#fff', height: '250px' }}
+							bordered={false}
+						>
+							<p className="text-small text-dark half-opacity">Unpaid Leave</p>
+							<ChartistGraph
+								className="ct-chart unpaid-leave-chart text-white"
+								data={{
+									series: [ 15, 5 ]
+								}}
+								type="Pie"
+								options={{
+									donut: true,
+									donutWidth: 30,
+									donutSolid: true
+								}}
+								listener={dailySalesChart.animation}
+							/>
+							<center>
+								<p className="font-tiny text-dimmed text-dark">
+									<i class="fas fa-circle unpaid-leave-chart-used" /> Used &nbsp;&nbsp;&nbsp;<i class="fas fa-circle unpaid-leave-chart-available" />{' '}
+									Available{' '}
+								</p>
+							</center>
+						</Card>
+					</Col>
+					<Col span={4}>
+          <Card
+							className="elevated-shadow-noh"
+							style={{ background: '#fff', height: '250px' }}
+							bordered={false}
+						>
+							<p className="text-small text-dark half-opacity">On Office Duty</p>
+              <div className="display-flex justify-center align-center height-100">
+                <p className="font-medium font-thin text-muted">No data to display.</p>
+              </div>
+						</Card>
+					</Col>
+				</Row>
+			</div>
+		);
+	}
 }
-export default Form.create()(LeaveRequest)
+export default Form.create()(LeaveRequest);

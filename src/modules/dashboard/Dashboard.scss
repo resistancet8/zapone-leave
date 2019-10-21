@@ -1,7 +1,20 @@
-.dashboard{
+.orange-bg {
+    background: #FF6B35;
+  }
+
+.dashboard.leave-management{
     .welcome-text{
         font-size: xx-large;
         font-weight: 300;
         color: #31b8ff;
     }
+
+    .ant-card-body {
+        height: 100px;
+    }
+
+    .ant-card-head-title {
+        color: white !important;
+    }
 }
+
