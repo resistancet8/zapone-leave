@@ -1,10 +1,10 @@
 import React from 'react';
 import './LeaveRequest.scss';
-import { Card, Form, DatePicker, Select, Input, Calendar, List, Avatar, Row, Col, Button, Icon } from 'antd';
+import { Card, Form, DatePicker, Select, Input, Calendar, List, Avatar, Row, Col, Button, Icon, Modal } from 'antd';
 import { dailySalesChart } from '../chart';
 import ChartistGraph from 'react-chartist';
+import ApplyLeaveModal from './ApplyLeaveModal';
 
-const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -25,17 +25,27 @@ const data = [
 ];
 
 class LeaveRequest extends React.Component {
+	state = {
+		leaveModalVisibilty: false
+	};
+
 	onChangeDate = (date, dateString) => {
 		console.log(date, dateString);
 	};
+
+	handleModalVisibility(leaveModalVisibilty) {
+		this.setState({ leaveModalVisibilty });
+	}
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<div className="leave-request">
+				<ApplyLeaveModal visible={this.state.leaveModalVisibilty} handleModalVisibility={this.handleModalVisibility.bind(this)} />
 				<Row>
 					<h2 className="text-dimmed font-large"> Apply Leave </h2>
 				</Row>
-				<Row gutter={16}>
+				<Row gutter={16} type="flex">
 					<Col span={6}>
 						<Card className="elevated-shadow-noh height-100" bordered={false}>
 							<p className="text-small text-dark half-opacity">Pending Request</p>
@@ -44,7 +54,7 @@ class LeaveRequest extends React.Component {
 					</Col>
 					<Col offset={12} span={6}>
 						<Card className="elevated-shadow-noh height-100" bordered={false}>
-							<Button type="primary" icon="form">
+							<Button type="danger" icon="form" onClick={() => this.handleModalVisibility(true)}>
 								Apply Leave
 							</Button>
 						</Card>
@@ -110,7 +120,7 @@ class LeaveRequest extends React.Component {
 							</center>
 						</Card>
 					</Col>
-          <Col span={5}>
+					<Col span={5}>
 						<Card
 							className="elevated-shadow-noh"
 							style={{ background: '#fff', height: '250px' }}
@@ -138,7 +148,7 @@ class LeaveRequest extends React.Component {
 							</center>
 						</Card>
 					</Col>
-          <Col span={5}>
+					<Col span={5}>
 						<Card
 							className="elevated-shadow-noh"
 							style={{ background: '#fff', height: '250px' }}
@@ -167,15 +177,15 @@ class LeaveRequest extends React.Component {
 						</Card>
 					</Col>
 					<Col span={4}>
-          <Card
+						<Card
 							className="elevated-shadow-noh"
 							style={{ background: '#fff', height: '250px' }}
 							bordered={false}
 						>
 							<p className="text-small text-dark half-opacity">On Office Duty</p>
-              <div className="display-flex justify-center align-center height-100">
-                <p className="font-medium font-thin text-muted">No data to display.</p>
-              </div>
+							<div className="display-flex justify-center align-center height-100">
+								<p className="font-medium font-thin text-muted">No data to display.</p>
+							</div>
 						</Card>
 					</Col>
 				</Row>

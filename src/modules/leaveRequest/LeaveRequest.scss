@@ -53,3 +53,19 @@
         }
     }
 }
+
+.ant-modal-content, .ant-modal-header {
+    border-radius: 0px !important;
+}
+
+.ant-modal-header {
+    background: #31b8ff !important;
+}
+
+.ant-modal-title, .ant-modal-close-icon {
+    color: #fff !important;
+}
+
+.ant-modal-body {
+    height: 600px !important;
+}

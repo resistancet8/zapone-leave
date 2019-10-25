@@ -1,9 +1,9 @@
 import React, { Suspense, lazy } from "react";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
-import ModuleRoutes from "./modules";
+import ModuleRoutes from "./modules/index";
 import { Spin, Icon } from 'antd';
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-const Login = lazy(() => import("./modules/login"));
+const Login = lazy(() => import("./modules/login/index"));
 const ForgotPassword = lazy(() => import("./modules/forgotPassword"));
 
 const Routes = props => (
