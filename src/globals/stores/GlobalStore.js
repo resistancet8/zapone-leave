@@ -3,7 +3,7 @@ import { observable } from "mobx"
 class GlobalStore {
     @observable isLoggedIn = true
     @observable loading = false
-    @observable collapsed = false
+    @observable collapsed = true
     @observable userInfo = { fullName: "Naveen N", firstName: "Naveen", lastName: "N" };
 
     constructor() {

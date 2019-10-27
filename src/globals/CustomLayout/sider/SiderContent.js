@@ -17,14 +17,6 @@ const SiderContent = [
   },
   {
     role: ["role"],
-    icon: "home",
-    name: "Balance",
-    key: "leave-balance",
-    children: [],
-    route: "/leave-balance"
-  },
-  {
-    role: ["role"],
     icon: "calendar",
     name: "Calendar",
     key: "leave-calendar",

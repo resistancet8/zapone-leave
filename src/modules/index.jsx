@@ -6,6 +6,7 @@ import { Spin, Icon, Result, Button } from 'antd';
 const Dashboard = lazy(() => import("./dashboard"));
 const LeaveRequest = lazy(() => import("./leaveRequest"));
 const LeaveCalendar = lazy(() => import("./leaveCalendar"));
+const LeaveReports = lazy(() => import("./leaveReports"));
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 const NoMatchPage = (props) => {
@@ -27,6 +28,7 @@ const Moduleroutes = props => {
         <Route path="/dashboard" render={() => <Dashboard {...props} />} />
         <Route path="/leave-request" render={() => <LeaveRequest {...props} />} />
         <Route path="/leave-calendar" render={() => <LeaveCalendar {...props} />} />
+        <Route path="/leave-reports" render={() => <LeaveReports {...props} />} />
         <Route component={NoMatchPage} />
       </Switch> 
     </Suspense>

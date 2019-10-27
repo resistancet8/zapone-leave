@@ -69,3 +69,36 @@
 .ant-modal-body {
     height: 600px !important;
 }
+
+.events, .events li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.events {
+    position: relative;
+}
+
+.events li {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.event-warning {
+    color: orange;
+}
+
+.event-normal {
+    color: green;
+}
+
+.event-error {
+    color :red;
+}
+
+.event-success {
+    color: greenyellow;
+}
