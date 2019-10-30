@@ -3,11 +3,9 @@ import { observer, inject } from 'mobx-react';
 import { Card, Carousel, Row, Col, Button, Icon, Divider, Table } from 'antd';
 import ChartistGraph from 'react-chartist';
 import { dailySalesChart } from '../chart';
-import LeavesServices from './../../services/LeavesServices';
 
 import './Dashboard.scss';
 const ButtonGroup = Button.Group;
-const CURRENT_USER = 1651212538794259;
 const moment = require('moment');
 
 class Dashboard extends Component {
@@ -21,106 +19,30 @@ class Dashboard extends Component {
 	next() {
 		this.carousel.next();
 	}
+
 	previous() {
 		this.carousel.prev();
 	}
 
-	componentDidMount() {
-		LeavesServices.getLeaveTypes()
-			.then((r) => {
-				this.props.leaves.addLeaveTypes(r);
-			})
-			.catch((e) => {});
-
-		LeavesServices.getLeaveApplications(CURRENT_USER)
-			.then((r) => {
-				this.props.leaves.addLeaveApplications(r);
-			})
-			.catch((e) => {});
-
-		LeavesServices.getLeaveBalances(CURRENT_USER)
-			.then((r) => {
-				this.props.leaves.addLeaveBalances(r);
-			})
-			.catch((e) => {});
-	}
-
 	render() {
-		
-		const columns = [
-			{
-				title: '#',
-				dataIndex: '#'
-			},
-			{
-				title: 'Leave Type',
-				dataIndex: 'type'
-			},
-			{
-				title: 'Start',
-				dataIndex: 'start'
-			},
-			{
-				title: 'End',
-				dataIndex: 'end'
-			},
-			{
-				title: '# days',
-				dataIndex: 'days'
-			},
-			{
-				title: 'Remarks',
-				dataIndex: 'remark'
-			},
-			{
-				title: 'Status',
-				dataIndex: 'status',
-				render: (t) => {
-					return (
-						<div className={`text-cap ${t == 'Approved' ? 'text-green' : 'text-red'} font-bold text-dark`}>
-							{t}
-						</div>
-					);
-				}
-			},
-			{
-				title: 'Action',
-				dataIndex: 'action'
-			}
-		];
-
-		const data = [];
-		const leaveApplications = this.props.leaves.leaveApplications || [];
 		let leaveBalances = this.props.leaves.leaveBalances || [];
+		let leaveApplications = this.props.leaves.leaveApplications || [];
 		let previousYearBalance = 0;
 		let currentBalance = 0;
 		let openingBalance = 0;
 		let availableBalance = 0;
 		let pendingApplications = 0;
 
-		leaveBalances.map(lb => {
+		leaveBalances.map((lb) => {
 			previousYearBalance += lb.previousYearBalance;
 			availableBalance += lb.availableBalance;
 			currentBalance += lb.currentBalance;
 			openingBalance += lb.openingBalance;
-		})
+		});
 
-		for (let i = 0; i < leaveApplications.length; i++) {
-			if(leaveApplications[i].status == 'pending') {
-				pendingApplications++;
-			}
-
-			data.push({
-				key: i,
-				'#': i + 1,
-				type: leaveApplications[i].leaveType.type,
-				start: leaveApplications[i].startDate,
-				end: leaveApplications[i].endDate,
-				days: Math.abs(moment(leaveApplications[i].startDate, 'YYYY-MM-DD').diff(moment(leaveApplications[i].endDate, 'YYYY-MM-DD'), 'days')) + 1,
-				remark: leaveApplications[i].remark,
-				status: leaveApplications[i].status
-			});
-		}
+		leaveApplications.map((la) => {
+			if (la.status == 'pending') pendingApplications++;
+		});
 
 		return (
 			<div className="dashboard leave-management">
@@ -129,13 +51,21 @@ class Dashboard extends Component {
 				</Row>
 				<Row className="mb" gutter={16} type="flex">
 					<Col span={6}>
-						<Card className="elevated-shadow-noh height-100" style={{ background: '#613DC1' }} bordered={false}>
+						<Card
+							className="elevated-shadow-noh height-100"
+							style={{ background: '#613DC1' }}
+							bordered={false}
+						>
 							<p className="text-small text-white half-opacity ">Pending Requests</p>
 							<p className="font-xlarge text-white">{pendingApplications}</p>
 						</Card>
 					</Col>
 					<Col span={12}>
-						<Card className="elevated-shadow-noh" style={{ background: '#58A4B0', height: '190px' }} bordered={false}>
+						<Card
+							className="elevated-shadow-noh"
+							style={{ background: '#58A4B0', height: '190px' }}
+							bordered={false}
+						>
 							<ChartistGraph
 								className="ct-chart"
 								data={dailySalesChart.data}
@@ -230,9 +160,10 @@ class Dashboard extends Component {
 				<Row className="mt">
 					<Table
 						title={() => 'Recent Updates'}
-						columns={columns}
+						loading={this.props.tableData.length <= 0}
+						columns={this.props.columnData}
 						pagination={false}
-						dataSource={data}
+						dataSource={this.props.tableData}
 						style={{ background: 'white' }}
 					/>
 				</Row>

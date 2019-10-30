@@ -22,4 +22,8 @@ export const applyLeave = (body) => {
 	return RestfulProvider.post(`organization/user/leave/apply`, body);
 };
 
-export default { getDashboard, getLeaveTypes, applyLeave, getLeaveBalances, getLeaveApplications }
+export const withdrawApplication = (props) => {
+	return RestfulProvider.post(`organization/user/leave/update`, props);
+};
+
+export default { getDashboard, getLeaveTypes, applyLeave, getLeaveBalances, getLeaveApplications, withdrawApplication }

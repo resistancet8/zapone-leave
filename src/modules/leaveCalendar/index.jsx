@@ -10,12 +10,12 @@ class Profile extends React.Component {
 	render() {
 		return (
 			<div className="leave-calendar">
-        <p className="text-muted font-large">Leave Calendar</p>
+				<p className="text-muted font-large">Leave Calendar</p>
 				<Row>
-					<Col >
-					<Card bordered={false} className="rounded-corner">
-					<Calendar onPanelChange={onPanelChange} />
-				</Card>
+					<Col>
+						<Card bordered={false} className="rounded-corner">
+							<Calendar onPanelChange={onPanelChange} />
+						</Card>
 					</Col>
 				</Row>
 			</div>
