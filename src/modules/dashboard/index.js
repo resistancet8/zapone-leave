@@ -3,9 +3,12 @@ import { observer, inject } from 'mobx-react';
 import { Card, Carousel, Row, Col, Button, Icon, Divider, Table } from 'antd';
 import ChartistGraph from 'react-chartist';
 import { dailySalesChart } from '../chart';
+import LeavesServices from './../../services/LeavesServices';
 
 import './Dashboard.scss';
 const ButtonGroup = Button.Group;
+const CURRENT_USER = 1651212538794259;
+const moment = require('moment');
 
 class Dashboard extends Component {
 	constructor(props) {
@@ -22,8 +25,28 @@ class Dashboard extends Component {
 		this.carousel.prev();
 	}
 
+	componentDidMount() {
+		LeavesServices.getLeaveTypes()
+			.then((r) => {
+				this.props.leaves.addLeaveTypes(r);
+			})
+			.catch((e) => {});
+
+		LeavesServices.getLeaveApplications(CURRENT_USER)
+			.then((r) => {
+				this.props.leaves.addLeaveApplications(r);
+			})
+			.catch((e) => {});
+
+		LeavesServices.getLeaveBalances(CURRENT_USER)
+			.then((r) => {
+				this.props.leaves.addLeaveBalances(r);
+			})
+			.catch((e) => {});
+	}
+
 	render() {
-		const { globals: { userInfo } } = this.props;
+		
 		const columns = [
 			{
 				title: '#',
@@ -46,30 +69,56 @@ class Dashboard extends Component {
 				dataIndex: 'days'
 			},
 			{
+				title: 'Remarks',
+				dataIndex: 'remark'
+			},
+			{
 				title: 'Status',
 				dataIndex: 'status',
 				render: (t) => {
 					return (
-						<div className={`${t == 'Approved' ? 'text-green' : 'text-red'} font-bold text-dark`}>{t}</div>
+						<div className={`text-cap ${t == 'Approved' ? 'text-green' : 'text-red'} font-bold text-dark`}>
+							{t}
+						</div>
 					);
 				}
+			},
+			{
+				title: 'Action',
+				dataIndex: 'action'
 			}
 		];
 
 		const data = [];
-		const randomLeaves = [ 'SL - Sick Leave', 'CL - Casual Leave', 'EL - Earned Leave' ];
-		const randomStatus = [ 'Approved', 'Rejected' ];
-		for (let i = 0; i < 5; i++) {
+		const leaveApplications = this.props.leaves.leaveApplications || [];
+		let leaveBalances = this.props.leaves.leaveBalances || [];
+		let previousYearBalance = 0;
+		let currentBalance = 0;
+		let openingBalance = 0;
+		let availableBalance = 0;
+		let pendingApplications = 0;
+
+		leaveBalances.map(lb => {
+			previousYearBalance += lb.previousYearBalance;
+			availableBalance += lb.availableBalance;
+			currentBalance += lb.currentBalance;
+			openingBalance += lb.openingBalance;
+		})
+
+		for (let i = 0; i < leaveApplications.length; i++) {
+			if(leaveApplications[i].status == 'pending') {
+				pendingApplications++;
+			}
+
 			data.push({
 				key: i,
 				'#': i + 1,
-				type: randomLeaves[Math.floor(Math.random() * (randomLeaves.length - 0)) + 0],
-				start: `${Math.floor(Math.random() * (12 - 5 + 1)) + 5}/${Math.floor(Math.random() * (12 - 5 + 1)) +
-					5}/${Math.floor(Math.random() * (2020 - 2010 + 1)) + 2010}`,
-				end: `${Math.floor(Math.random() * (12 - 5 + 1)) + 5}/${Math.floor(Math.random() * (12 - 5 + 1)) +
-					5}/${Math.floor(Math.random() * (2020 - 2010 + 1)) + 2010}`,
-				days: Math.floor(Math.random() * (12 - 5 + 1)) + 5,
-				status: randomStatus[Math.floor(Math.random() * (randomStatus.length - 0)) + 0]
+				type: leaveApplications[i].leaveType.type,
+				start: leaveApplications[i].startDate,
+				end: leaveApplications[i].endDate,
+				days: Math.abs(moment(leaveApplications[i].startDate, 'YYYY-MM-DD').diff(moment(leaveApplications[i].endDate, 'YYYY-MM-DD'), 'days')) + 1,
+				remark: leaveApplications[i].remark,
+				status: leaveApplications[i].status
 			});
 		}
 
@@ -82,7 +131,7 @@ class Dashboard extends Component {
 					<Col span={6}>
 						<Card className="elevated-shadow-noh height-100" style={{ background: '#613DC1' }} bordered={false}>
 							<p className="text-small text-white half-opacity ">Pending Requests</p>
-							<p className="font-xlarge text-white">23</p>
+							<p className="font-xlarge text-white">{pendingApplications}</p>
 						</Card>
 					</Col>
 					<Col span={12}>
@@ -156,25 +205,25 @@ class Dashboard extends Component {
 					<Col span={6}>
 						<Card className="elevated-shadow-noh" bordered={false} style={{ background: '#8AC926' }}>
 							<p className="text-small text-white half-opacity ">Carried</p>
-							<p className="font-large text-white">256</p>
+							<p className="font-large text-white">{previousYearBalance}</p>
 						</Card>
 					</Col>
 					<Col span={6}>
 						<Card className="elevated-shadow-noh" bordered={false} style={{ background: '#D00000' }}>
-							<p className="text-small text-white half-opacity ">Leave Credit</p>
-							<p className="font-large text-white">23</p>
+							<p className="text-small text-white half-opacity ">Opening</p>
+							<p className="font-large text-white">{openingBalance}</p>
 						</Card>
 					</Col>
 					<Col span={6}>
 						<Card className="elevated-shadow-noh" bordered={false} style={{ background: '#F26419' }}>
-							<p className="text-small text-white half-opacity ">Leave Debit</p>
-							<p className="font-large text-white">65</p>
+							<p className="text-small text-white half-opacity ">Current</p>
+							<p className="font-large text-white">{currentBalance}</p>
 						</Card>
 					</Col>
 					<Col span={6}>
 						<Card className="elevated-shadow-noh" bordered={false} style={{ background: '#3454D1' }}>
 							<p className="text-small text-white half-opacity ">Days Available</p>
-							<p className="font-large text-white">12</p>
+							<p className="font-large text-white">{availableBalance}</p>
 						</Card>
 					</Col>
 				</Row>
@@ -192,4 +241,4 @@ class Dashboard extends Component {
 	}
 }
 
-export default inject('globals')(observer(Dashboard));
+export default inject('leaves')(observer(Dashboard));

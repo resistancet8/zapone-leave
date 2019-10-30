@@ -1,10 +1,20 @@
 import { observable } from "mobx";
 
 class LeavesStore {
-  @observable leaveData;
+  @observable leaveTypes;
+  @observable leaveApplications;
+  @observable leaveBalances;
 
-  addLeaveData = data => {
-    this.leaveData = data;
+  addLeaveTypes = data => {
+    this.leaveTypes = data;
+  };
+
+  addLeaveApplications = data => {
+    this.leaveApplications = data;
+  };
+
+  addLeaveBalances = data => {
+    this.leaveBalances = data;
   };
 
 }

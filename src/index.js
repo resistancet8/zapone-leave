@@ -6,7 +6,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 
 ReactDOM.render(<Provider {...Stores}><App /></Provider >, document.getElementById('root'));
 

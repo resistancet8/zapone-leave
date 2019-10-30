@@ -141,6 +141,10 @@ code {
   font-size: 12px;
 }
 
+.text-cap {
+  text-transform: capitalize !important;
+}
+
 .ellipsize-text {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -150,6 +154,7 @@ code {
 .font-tiny {
   font-size: 10px;
 }
+
 .font-medium {
   font-size: 16px;
 }

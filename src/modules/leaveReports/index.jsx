@@ -1,15 +1,33 @@
 import React from 'react';
-import { Calendar, Card, Row, Col, Table } from 'antd';
+import { Row, Col, Table, Form } from 'antd';
+import { inject, observer } from 'mobx-react';
+import LeavesServices from './../../services/LeavesServices';
 import './leaveReports.scss';
-
-function onPanelChange(value, mode) {
-  console.log(value, mode);
-}
+const CURRENT_USER = 1651212538794259;
 
 class Profile extends React.Component {
-  render() {
+	componentDidMount() {
+		LeavesServices.getLeaveTypes()
+			.then((r) => {
+				this.props.leaves.addLeaveTypes(r);
+			})
+			.catch((e) => {});
 
-    const columns = [
+		LeavesServices.getLeaveApplications(CURRENT_USER)
+			.then((r) => {
+				this.props.leaves.addLeaveApplications(r);
+			})
+			.catch((e) => {});
+
+		LeavesServices.getLeaveBalances(CURRENT_USER)
+			.then((r) => {
+				this.props.leaves.addLeaveBalances(r);
+			})
+			.catch((e) => {});
+	}
+
+  render() {
+		const columns = [
 			{
 				title: '#',
 				dataIndex: '#'
@@ -31,32 +49,47 @@ class Profile extends React.Component {
 				dataIndex: 'days'
 			},
 			{
+				title: 'Remarks',
+				dataIndex: 'remark'
+			},
+			{
 				title: 'Status',
 				dataIndex: 'status',
 				render: (t) => {
 					return (
-						<div className={`${t == 'Approved' ? 'text-green' : 'text-red'} font-bold text-dark`}>{t}</div>
+						<div className={`text-cap ${t == 'Approved' ? 'text-green' : 'text-red'} font-bold text-dark`}>
+							{t}
+						</div>
 					);
 				}
+			},
+			{
+				title: 'Action',
+				dataIndex: 'action'
 			}
 		];
 
-    const data = [];
-    const randomLeaves = [ 'SL - Sick Leave', 'CL - Casual Leave', 'EL - Earned Leave' ];
-		const randomStatus = [ 'Approved', 'Rejected' ];
-		for (let i = 0; i < 20; i++) {
+		const data = [];
+		const leaveApplications = this.props.leaves.leaveApplications || [];
+		let classes = [
+			{ parent: 'marriage-chart', used: 'marriage-chart-used', avail: 'marriage-chart-available' },
+			{ parent: 'paid-leave-chart', used: 'paid-leave-chart-used', avail: 'paid-leave-chart-available' },
+			{ parent: 'sick-leave-chart', used: 'sick-leave-chart-used', avail: 'sick-leave-chart-available' },
+			{ parent: 'unpaid-leave-chart', used: 'unpaid-leave-chart-used', avail: 'unpaid-leave-chart-available' }
+		];
+
+		for (let i = 0; i < leaveApplications.length; i++) {
 			data.push({
 				key: i,
 				'#': i + 1,
-				type: randomLeaves[Math.floor(Math.random() * (randomLeaves.length - 0)) + 0],
-				start: `${Math.floor(Math.random() * (12 - 5 + 1)) + 5}/${Math.floor(Math.random() * (12 - 5 + 1)) +
-					5}/${Math.floor(Math.random() * (2020 - 2010 + 1)) + 2010}`,
-				end: `${Math.floor(Math.random() * (12 - 5 + 1)) + 5}/${Math.floor(Math.random() * (12 - 5 + 1)) +
-					5}/${Math.floor(Math.random() * (2020 - 2010 + 1)) + 2010}`,
-				days: Math.floor(Math.random() * (12 - 5 + 1)) + 5,
-				status: randomStatus[Math.floor(Math.random() * (randomStatus.length - 0)) + 0]
+				type: leaveApplications[i].leaveType.type,
+				start: leaveApplications[i].startDate,
+				end: leaveApplications[i].endDate,
+				days: 3,
+				remark: leaveApplications[i].remark,
+				status: leaveApplications[i].status
 			});
-    }
+		}
     
     return (
       <div className="leave-reports">
@@ -76,4 +109,4 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+export default Form.create()(inject('leaves')(observer(Profile)));
