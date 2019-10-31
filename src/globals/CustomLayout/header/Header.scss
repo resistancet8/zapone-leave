@@ -26,3 +26,11 @@
     }
   }
   
+  .ant-popover-placement-bottomRight > .ant-popover-content > .ant-popover-arrow {
+    display: none;
+  }
+  
+  .custom-badge .ant-badge-count {
+    top: -2px !important;
+    right: -4px !important;
+  }

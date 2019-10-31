@@ -50,13 +50,8 @@ class Moduleroutes extends React.Component {
 
 	handleWithdraw(props) {
 		let data = {
-			// endDate: props.endDate,
 			id: props.id,
-			// leaveApplicationUser: { id: props.leaveApplicationUser.id },
-			// leaveType: { id: props.leaveType.id },
-			// reason: props.reason,
-			// startDate: props.startDate,
-			status: 'withdrawl'
+			status: 'Withdrawal'
 		};
 
 		LeavesServices.withdrawApplication(data)
@@ -96,19 +91,32 @@ class Moduleroutes extends React.Component {
 			},
 			{
 				title: 'Start',
-				dataIndex: 'start'
+				dataIndex: 'start',
+				render: (t) => {
+					return <div>{moment(t, 'YYYY-MM-DD').format('Do MMM YY')}</div>;
+				}
 			},
 			{
 				title: 'End',
-				dataIndex: 'end'
+				dataIndex: 'end',
+				render: (t) => {
+					return <div>{moment(t, 'YYYY-MM-DD').format('Do MMM YY')}</div>;
+				}
 			},
 			{
 				title: '# days',
 				dataIndex: 'days'
 			},
 			{
+				title: 'Reason',
+				dataIndex: 'reason'
+			},
+			{
 				title: 'Remarks',
-				dataIndex: 'remark'
+				dataIndex: 'remark',
+				render: (t) => {
+					return <div>{t && t.length ? t : <span className="font-bold">No remarks</span>}</div>;
+				}
 			},
 			{
 				title: 'Status',
@@ -155,6 +163,7 @@ class Moduleroutes extends React.Component {
 							'days'
 						)
 					) + 1,
+				reason: leaveApplications[i].reason,
 				remark: leaveApplications[i].remark,
 				status: leaveApplications[i].status,
 				action: leaveApplications[i]
@@ -174,10 +183,7 @@ class Moduleroutes extends React.Component {
 						path="/leave-calendar"
 						render={() => <LeaveCalendar columnData={columns} tableData={data} />}
 					/>
-					<Route
-						path="/leave-reports"
-						render={() => <LeaveReports columnData={columns} tableData={data} />}
-					/>
+					<Route path="/leave-reports" render={() => <LeaveReports />} />
 					<Route component={NoMatchPage} />
 				</Switch>
 			</Suspense>
