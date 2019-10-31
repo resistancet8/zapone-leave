@@ -34,3 +34,58 @@
     top: -2px !important;
     right: -4px !important;
   }
+
+  .custom-popover-notification {
+    width: 350px !important;
+  }
+
+  .notification-clear {
+    height: 46px;
+    color: rgba(0,0,0,.65);
+    line-height: 46px;
+    text-align: center;
+    border-top: 1px solid #e8e8e8;
+    border-radius: 0 0 4px 4px;
+    transition: all .3s;
+}
+
+.notification-clear div {
+  display: inline-block;
+  width: 50%;
+  cursor: pointer;
+  transition: all .3s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.notification-clear div:not(:only-child):last-child {
+  border-left: 1px solid #e8e8e8;
+}
+
+.notification-clear div {
+  display: inline-block;
+  width: 50%;
+  cursor: pointer;
+  transition: all .3s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.custom-popover-notification {
+  .ant-popover-inner-content{
+    padding: 0 !important;
+  }
+
+  .ant-list-item {
+    padding: 16px !important;
+  }
+
+  .ant-tabs-bar {
+    padding: 10px 0 0 10px;
+  }
+}
+

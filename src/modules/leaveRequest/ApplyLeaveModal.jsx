@@ -25,6 +25,7 @@ const OPTIONS = [
 	{ username: 'dishal', name: 'Vishal', email: 'vishal@gmail.com' },
 	{ username: 'dipak', name: 'Dipak', email: 'dipak@gmail.com' }
 ];
+const CURRENT_USER = 1651212538794259;
 
 function getListData(value) {
 	let listData = [];
